@@ -308,7 +308,7 @@ Create a new file in your prompts directory: `YourAgent-subagent.agent.md`
 description: 'Brief description of what this agent does'
 argument-hint: What kind of task to delegate (e.g., "Analyze database schema")
 tools: ['search', 'usages', 'edit', 'runCommands', ...]  # Tools your agent needs
-model: Claude Sonnet 4.5 (copilot)  # Or GPT-5.2, Gemini, etc.
+model: Claude Sonnet 4.5 (copilot)  # Or Gemini 3 Flash (Preview), etc.
 ---
 
 You are a [ROLE] SUBAGENT called by a parent CONDUCTOR agent.
@@ -379,7 +379,7 @@ Add an entry to the README's Specialized Subagents section describing when to us
 
 - **Single Responsibility**: Each agent should have one clear domain of expertise
 - **Clear Scope**: Define exactly what the agent does and doesn't handle
-- **Model Selection**: Choose the right model for the task (Sonnet for complex reasoning, Flash for speed, GPT for research)
+- **Model Selection**: Choose the right model for the task (Sonnet for complex reasoning, Flash for speed/research)
 - **Tool Minimalism**: Only declare tools the agent actually needs
 - **Return Format**: Always return structured findings (not raw dumps)
 - **Parallel-Aware**: Consider if your agent can run in parallel with others
@@ -404,7 +404,7 @@ Add an entry to the README's Specialized Subagents section describing when to us
   }
   ```
   - `customAgentInSubagent.enabled`: Allow subagents to use custom agents defined in a '-agents.md' file like the ones above 
-  - `responsesApiReasoningEffort`: Set to "high" for enhanced reasoning in planning agents (GPT models)
+  - `responsesApiReasoningEffort`: Set to "high" for enhanced reasoning in planning agents using reasoning-capable models
 
 ## Best Practices
 
@@ -445,7 +445,7 @@ Create a new file in your prompts directory: `YourAgent-subagent.agent.md`
 description: 'Brief description of what this agent does'
 argument-hint: What kind of task to delegate (e.g., "Analyze database schema")
 tools: ['search', 'usages', 'edit', 'runCommands', ...]  # Tools your agent needs
-model: Claude Sonnet 4.5 (copilot)  # Or GPT-5.2, Gemini, etc.
+model: Claude Sonnet 4.5 (copilot)  # Or Gemini 3 Flash (Preview), etc.
 ---
 
 You are a [ROLE] SUBAGENT called by a parent CONDUCTOR agent.
@@ -511,7 +511,7 @@ Add an entry to the README's Specialized Subagents section describing when to us
 
 - **Single Responsibility**: Each agent should have one clear domain of expertise
 - **Clear Scope**: Define exactly what the agent does and doesn't handle
-- **Model Selection**: Choose the right model for the task (Sonnet for complex reasoning, Flash for speed, GPT for research)
+- **Model Selection**: Choose the right model for the task (Sonnet for complex reasoning, Flash for speed/research)
 - **Tool Minimalism**: Only declare tools the agent actually needs
 - **Return Format**: Always return structured findings (not raw dumps)
 - **Parallel-Aware**: Consider if your agent can run in parallel with others
