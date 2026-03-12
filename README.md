@@ -22,7 +22,7 @@ This repository contains custom agent prompts that work together to handle the c
   - Handles phase tracking and user approval gates
 
 - **Prometheus** (`Prometheus.agent.md`) - The AUTONOMOUS PLANNER
-  - **Model:** GPT-5.2 High (if reasoning set to high, check requirements block below)
+  - **Model:** Claude Sonnet 4.5 (copilot)
   - Researches requirements and analyzes codebases
   - Writes comprehensive TDD-driven implementation plans
   - Automatically hands off to Atlas for execution
@@ -31,7 +31,7 @@ This repository contains custom agent prompts that work together to handle the c
 ### Specialized Subagents
 
 - **Oracle-subagent** (`Oracle-subagent.agent.md`) - THE RESEARCHER
-  - **Model:** GPT-5.2 (copilot)
+  - **Model:** Gemini 3 Flash (Preview) (copilot)
   - Gathers comprehensive context about tasks
   - Can delegate to Explorer for large-scope research
   - Returns structured findings to parent agents
@@ -52,14 +52,14 @@ This repository contains custom agent prompts that work together to handle the c
   - MANDATORY parallel search strategy (3-10 simultaneous searches)
 
 - **Code-Review-subagent** (`Code-Review-subagent.agent.md`) - THE REVIEWER
-  - **Model:** GPT-5.2 (copilot)
+  - **Model:** Claude Sonnet 4.5 (copilot)
   - Reviews code for correctness, quality, and test coverage
   - Returns structured feedback (APPROVED/NEEDS_REVISION/FAILED)
   - Can be invoked in parallel for independent phases
   - Focus on blocking issues vs nice-to-haves
 
 - **Frontend-Engineer-subagent** (`Frontend-Engineer-subagent.agent.md`) - THE UI/UX SPECIALIST
-  - **Model:** Gemini 3 Pro (Preview) (copilot)
+  - **Model:** Claude Sonnet 4.5 (copilot)
   - Implements user interfaces, styling, and responsive layouts
   - Expert in modern frontend frameworks and tooling
   - Follows TDD principles for frontend (component tests first)
