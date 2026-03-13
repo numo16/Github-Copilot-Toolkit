@@ -29,13 +29,6 @@ AGENTS=(
   "Frontend-Engineer-subagent.agent.md"
 )
 
-# Skills: each entry is "skill-name:file-within-skill-dir"
-SKILL_NAME="mcp-sync"
-SKILL_FILES=(
-  "SKILL.md"
-  "mcp-introspect.sh"
-)
-
 # ── Color helpers ─────────────────────────────────────────────────────────────
 RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 CYAN='\033[0;36m'; BOLD='\033[1m'; RESET='\033[0m'
@@ -133,20 +126,26 @@ if should_install "agents"; then
 fi
 
 # ── Install skills ────────────────────────────────────────────────────────────
-if should_install "skills"; then
-  SKILL_DEST="$SKILLS_DIR/$SKILL_NAME"
-  info "Installing skill '$SKILL_NAME' → $SKILL_DEST"
-  mkdir -p "$SKILL_DEST"
-  for file in "${SKILL_FILES[@]}"; do
-    if curl -fsSL "$BASE_URL/skills/$SKILL_NAME/$file" -o "$SKILL_DEST/$file"; then
-      success "skills/$SKILL_NAME/$file"
-      # Make shell scripts executable
-      [[ "$file" == *.sh ]] && chmod +x "$SKILL_DEST/$file"
+install_skill() {
+  local skill_name="$1"; shift
+  local skill_files=("$@")
+  local skill_dest="$SKILLS_DIR/$skill_name"
+  info "Installing skill '$skill_name' → $skill_dest"
+  mkdir -p "$skill_dest"
+  for file in "${skill_files[@]}"; do
+    if curl -fsSL "$BASE_URL/skills/$skill_name/$file" -o "$skill_dest/$file"; then
+      success "skills/$skill_name/$file"
+      [[ "$file" == *.sh ]] && chmod +x "$skill_dest/$file"
     else
-      error "skills/$SKILL_NAME/$file  (download failed)"
+      error "skills/$skill_name/$file  (download failed)"
       FAILED=1
     fi
   done
+}
+
+if should_install "skills"; then
+  install_skill "mcp-sync"      "SKILL.md" "mcp-introspect.sh"
+  install_skill "skill-creator" "SKILL.md"
   echo ""
 fi
 
@@ -257,7 +256,9 @@ if should_install "agents"; then
   STEP=$((STEP + 1))
 fi
 if should_install "skills"; then
-  echo "  $STEP. Use the mcp-sync skill: run /mcp-sync in the Copilot CLI, or ask Copilot to sync your agents with MCP tools."
+  echo "  $STEP. Try the built-in skills:"
+  echo "         /mcp-sync      — sync agents with MCP tools"
+  echo "         /skill-creator — create new custom skills for this toolkit"
   STEP=$((STEP + 1))
 fi
 echo ""

@@ -21,9 +21,11 @@ Github-Copilot-Atlas/
 │   ├── Code-Review-subagent.agent.md    # Code reviewer
 │   └── Frontend-Engineer-subagent.agent.md  # UI/UX specialist
 ├── skills/
-│   └── mcp-sync/                        # Agent Skill: sync MCP tools → agent files
-│       ├── SKILL.md                     # Skill instructions
-│       └── mcp-introspect.sh            # Helper: lists tools from an MCP server
+│   ├── mcp-sync/                        # Agent Skill: sync MCP tools → agent files
+│   │   ├── SKILL.md                     # Skill instructions
+│   │   └── mcp-introspect.sh            # Helper: lists tools from an MCP server
+│   └── skill-creator/                   # Agent Skill: create new skills for this toolkit
+│       └── SKILL.md                     # Skill instructions
 ├── instructions/
 │   └── copilot-instructions.md          # Custom instructions template
 └── hooks/
@@ -72,7 +74,7 @@ curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/in
 | `--components` value | What it installs |
 |----------------------|-----------------|
 | `agents` | All 7 custom agent `.agent.md` files |
-| `skills` | `mcp-sync` skill directory |
+| `skills` | `mcp-sync` and `skill-creator` skill directories |
 | `instructions` | `copilot-instructions.md` template |
 | `hooks` | Hook documentation (`hooks/README.md`) |
 | `all` (default) | Everything above |
@@ -82,7 +84,7 @@ curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/in
 | Component | User scope | Workspace scope |
 |-----------|-----------|----------------|
 | agents | VS Code User prompts dir | `.github/agents/` |
-| skills | `~/.copilot/skills/mcp-sync/` | `.github/skills/mcp-sync/` |
+| skills | `~/.copilot/skills/mcp-sync/` and `~/.copilot/skills/skill-creator/` | `.github/skills/mcp-sync/` and `.github/skills/skill-creator/` |
 | instructions | `~/.copilot/copilot-instructions.md` | `.github/copilot-instructions.md` |
 | hooks | `~/.copilot/hooks/` | `.github/hooks/` |
 
@@ -230,6 +232,39 @@ Unmapped tools (review manually):
 - ✅ Idempotent — running twice produces no additional changes
 - ✅ Non-destructive — never removes non-MCP tools from agent frontmatter
 - ✅ Managed section — only touches the `<!-- mcp-sync:begin -->` / `<!-- mcp-sync:end -->` block
+
+---
+
+### `skill-creator`
+
+A guided workflow for building new skills that integrate with the Atlas agent ecosystem. Whether you want to wrap an existing workflow as a reusable slash command or create a skill from scratch, `/skill-creator` walks you through every step.
+
+**Invoke in Copilot CLI:**
+```
+/skill-creator
+```
+
+**Or naturally (Copilot auto-detects relevance):**
+```
+Create a new skill for X
+Turn this workflow into a skill
+Add a skill that does Y
+Build a skill for Z
+```
+
+**What it does:**
+
+1. **Capture intent** — Understands what the skill should do and when it should trigger, extracting context from the current conversation where possible
+2. **Plan structure** — Decides whether helper scripts or reference files are needed alongside `SKILL.md`
+3. **Write `SKILL.md`** — Drafts the skill following toolkit conventions (frontmatter, step-by-step instructions, imperative style)
+4. **Integrate with agents** — Updates relevant agent files (`Atlas`, `Prometheus`, `Sisyphus`, etc.) with a `## Skills Available` section so agents know when to invoke the skill
+5. **Add helper scripts** — Optionally creates POSIX-compatible shell scripts for deterministic operations
+6. **Update `README.md`** — Adds the new skill to the directory tree and Skills section
+
+**Properties:**
+- ✅ Toolkit-aware — knows the agents, their roles, and how skills wire into the orchestration cycle
+- ✅ Checklist-driven — provides a self-review checklist before finishing
+- ✅ Flexible — works from a blank slate or from an existing workflow in the conversation
 
 ---
 

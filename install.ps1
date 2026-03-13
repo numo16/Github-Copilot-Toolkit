@@ -36,8 +36,10 @@ $Agents = @(
   "Frontend-Engineer-subagent.agent.md"
 )
 
-$SkillName  = "mcp-sync"
-$SkillFiles = @("SKILL.md", "mcp-introspect.sh")
+$Skills = @(
+  @{ Name = "mcp-sync";      Files = @("SKILL.md", "mcp-introspect.sh") },
+  @{ Name = "skill-creator"; Files = @("SKILL.md") }
+)
 
 # ── Helper: check if a component is selected ──────────────────────────────────
 function Should-Install([string]$comp) {
@@ -99,18 +101,20 @@ if (Should-Install "agents") {
 
 # ── Install skills ─────────────────────────────────────────────────────────────
 if (Should-Install "skills") {
-  $SkillDest = Join-Path $SkillsDir $SkillName
-  Write-Host "[Toolkit] Installing skill '$SkillName' → $SkillDest" -ForegroundColor Cyan
-  New-Item -ItemType Directory -Force -Path $SkillDest | Out-Null
-  foreach ($file in $SkillFiles) {
-    $url  = "$BaseUrl/skills/$SkillName/$file"
-    $dest = Join-Path $SkillDest $file
-    try {
-      Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
-      Write-Host "  ✓ skills/$SkillName/$file" -ForegroundColor Green
-    } catch {
-      Write-Host "  ✗ skills/$SkillName/$file  (download failed: $_)" -ForegroundColor Red
-      $Failed++
+  foreach ($skill in $Skills) {
+    $skillDest = Join-Path $SkillsDir $skill.Name
+    Write-Host "[Toolkit] Installing skill '$($skill.Name)' → $skillDest" -ForegroundColor Cyan
+    New-Item -ItemType Directory -Force -Path $skillDest | Out-Null
+    foreach ($file in $skill.Files) {
+      $url  = "$BaseUrl/skills/$($skill.Name)/$file"
+      $dest = Join-Path $skillDest $file
+      try {
+        Invoke-WebRequest -Uri $url -OutFile $dest -UseBasicParsing
+        Write-Host "  ✓ skills/$($skill.Name)/$file" -ForegroundColor Green
+      } catch {
+        Write-Host "  ✗ skills/$($skill.Name)/$file  (download failed: $_)" -ForegroundColor Red
+        $Failed++
+      }
     }
   }
   Write-Host ""
@@ -211,7 +215,9 @@ if (Should-Install "agents") {
   $step++
 }
 if (Should-Install "skills") {
-  Write-Host "  $step. Use the mcp-sync skill: run /mcp-sync in the Copilot CLI, or ask Copilot to sync your agents with MCP tools."
+  Write-Host "  $step. Try the built-in skills:"
+  Write-Host "         /mcp-sync      — sync agents with MCP tools"
+  Write-Host "         /skill-creator — create new custom skills for this toolkit"
   $step++
 }
 Write-Host ""

@@ -39,7 +39,7 @@ $s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/inst
 | Component | What it installs | Workspace destination | User destination |
 |-----------|-----------------|----------------------|-----------------|
 | `agents` | Atlas, Prometheus, and all subagents (`.agent.md`) | `.github/agents/` | VS Code prompts dir |
-| `skills` | `mcp-sync` skill (`SKILL.md` + helper script) | `.github/skills/mcp-sync/` | `~/.copilot/skills/mcp-sync/` |
+| `skills` | `mcp-sync` skill (`SKILL.md` + helper script) and `skill-creator` skill (`SKILL.md`) | `.github/skills/mcp-sync/` and `.github/skills/skill-creator/` | `~/.copilot/skills/mcp-sync/` and `~/.copilot/skills/skill-creator/` |
 | `instructions` | `copilot-instructions.md` template | `.github/copilot-instructions.md` | `~/.copilot/copilot-instructions.md` |
 | `hooks` | Hook documentation (`hooks/README.md`) | `.github/hooks/` | `~/.copilot/hooks/` |
 | `all` (default) | Everything above | — | — |
@@ -195,16 +195,22 @@ foreach ($agent in $agents) {
 }
 ```
 
-#### mcp-sync skill
+#### Skills
 
 **macOS / Linux:**
 ```bash
+# mcp-sync skill
 SKILL_DIR="<SKILLS_INSTALL_DIR>/mcp-sync"
 mkdir -p "$SKILL_DIR"
 for f in SKILL.md mcp-introspect.sh; do
-  curl -fsSL "$BASE_URL/skills/mcp-sync/$f" -o "$SKILL_DIR/$f" && echo "✓ $f"
+  curl -fsSL "$BASE_URL/skills/mcp-sync/$f" -o "$SKILL_DIR/$f" && echo "✓ mcp-sync/$f"
 done
 chmod +x "$SKILL_DIR/mcp-introspect.sh"
+
+# skill-creator skill
+SKILL_DIR="<SKILLS_INSTALL_DIR>/skill-creator"
+mkdir -p "$SKILL_DIR"
+curl -fsSL "$BASE_URL/skills/skill-creator/SKILL.md" -o "$SKILL_DIR/SKILL.md" && echo "✓ skill-creator/SKILL.md"
 ```
 
 #### Custom instructions
@@ -294,12 +300,14 @@ Run the following and confirm all seven agent files are present:
 ```bash
 ls "<AGENTS_INSTALL_DIR>"/*.agent.md
 ls "<SKILLS_INSTALL_DIR>/mcp-sync/"
+ls "<SKILLS_INSTALL_DIR>/skill-creator/"
 ```
 
 **Windows (PowerShell):**
 ```powershell
 Get-ChildItem "<AGENTS_INSTALL_DIR>\*.agent.md" | Select-Object Name
 Get-ChildItem "<SKILLS_INSTALL_DIR>\mcp-sync\" | Select-Object Name
+Get-ChildItem "<SKILLS_INSTALL_DIR>\skill-creator\" | Select-Object Name
 ```
 
 Expected agents:
@@ -319,6 +327,11 @@ SKILL.md
 mcp-introspect.sh
 ```
 
+Expected skill-creator skill files:
+```
+SKILL.md
+```
+
 ---
 
 ### Step 7: Reload VS Code
@@ -336,7 +349,7 @@ by typing `@Atlas` or `@Prometheus` in the chat panel.
 
 Let them know they can read the
 [README](https://github.com/numo16/Github-Copilot-Atlas/blob/main/README.md)
-for a full overview of every agent, the mcp-sync skill, and the recommended development workflow.
+for a full overview of every agent, the `mcp-sync` and `skill-creator` skills, and the recommended development workflow.
 
 If SCOPE = workspace, remind them that committing `.github/agents/`, `.github/skills/`, and
 `.github/copilot-instructions.md` to the repository is the easiest way to share the full toolkit
