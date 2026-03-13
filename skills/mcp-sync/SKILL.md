@@ -68,8 +68,8 @@ The script outputs a JSON array of tool objects:
 
 If the script exits non-zero (timeout, auth error, etc.), skip that server with a warning note and continue.
 
-**MCP tool IDs** follow the convention: `mcp/<server-name>/<tool-name>`
-Example: `mcp/github/create_pull_request`
+**MCP tool IDs** follow the convention: `<server-name>/<tool-name>`
+Example: `github/create_pull_request`
 
 ---
 
@@ -96,7 +96,7 @@ For each agent file, make two targeted edits:
 Add relevant MCP tool IDs to the existing `tools:` array. Rules:
 - **Preserve** all existing entries (never remove non-MCP tools)
 - **Deduplicate** (skip if the tool ID is already present)
-- Format: append to the array, e.g. `'mcp/github/create_pull_request'`
+- Format: append to the array, e.g. `'github/create_pull_request'`
 
 ### 4b — Managed `## MCP Tools Available` block
 
@@ -112,10 +112,10 @@ The block format:
 The following tools are provided by MCP servers configured in this project.
 Use them when appropriate for your tasks.
 
-### `mcp/github/create_pull_request`
+### `github/create_pull_request`
 Creates a pull request in a GitHub repository. Use when implementation is complete and changes are ready for review.
 
-### `mcp/github/search_repositories`
+### `github/search_repositories`
 Searches GitHub repositories. Use when researching external dependencies or finding reference implementations.
 
 <!-- mcp-sync:end -->
@@ -143,20 +143,20 @@ Servers skipped:      slack (auth required)
 
 Agent updates:
   Atlas.agent.md
-    + mcp/github/create_pull_request
-    + mcp/github/list_pull_requests
+    + github/create_pull_request
+    + github/list_pull_requests
     ✓ ## MCP Tools Available block updated
 
   Sisyphus-subagent.agent.md
-    + mcp/postgres/query
-    + mcp/postgres/list_tables
+    + postgres/query
+    + postgres/list_tables
     ✓ ## MCP Tools Available block updated
 
   Oracle-subagent.agent.md   — no changes (no relevant tools found)
   Explorer-subagent.agent.md — no changes (no relevant tools found)
 
 Unmapped tools (review manually):
-  mcp/github/manage_notifications — not mapped to any agent
+  github/manage_notifications — not mapped to any agent
 ```
 
 ---
