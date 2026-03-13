@@ -1,23 +1,25 @@
-# GitHub Copilot Atlas — Installation Guide
+# GitHub Copilot Toolkit — Installation Guide
 
 ## For Humans
 
 Paste this into your VS Code Copilot chat session:
 
 ```
-Install GitHub Copilot Atlas by following the instructions here:
+Install the GitHub Copilot Toolkit by following the instructions here:
 https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.md
 ```
 
 **Alternative: run the automated install script directly**
 
 ```bash
-# macOS / Linux — user scope (global, default)
+# macOS / Linux — user scope (global, default — installs all components)
 curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.sh | bash
 
 # macOS / Linux — workspace scope (project-specific, run from project root)
-# Installs to .github/agents/ — works with both VS Code and Copilot CLI
 curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.sh | bash -s -- --scope=workspace
+
+# Install only specific components (agents, skills, instructions, hooks, or all)
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.sh | bash -s -- --scope=workspace --components=agents,skills
 ```
 
 ```powershell
@@ -25,10 +27,22 @@ curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/in
 irm https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.ps1 | iex
 
 # Windows — workspace scope (project-specific, run from project root)
-# Installs to .github\agents\ — works with both VS Code and Copilot CLI
 $s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.ps1
 & ([scriptblock]::Create($s)) -Scope workspace
+
+# Install only specific components
+& ([scriptblock]::Create($s)) -Scope workspace -Components "agents,skills"
 ```
+
+### Component overview
+
+| Component | What it installs | Workspace destination | User destination |
+|-----------|-----------------|----------------------|-----------------|
+| `agents` | Atlas, Prometheus, and all subagents (`.agent.md`) | `.github/agents/` | VS Code prompts dir |
+| `skills` | `mcp-sync` skill (`SKILL.md` + helper script) | `.github/skills/mcp-sync/` | `~/.copilot/skills/mcp-sync/` |
+| `instructions` | `copilot-instructions.md` template | `.github/copilot-instructions.md` | `~/.copilot/copilot-instructions.md` |
+| `hooks` | Hook documentation (`hooks/README.md`) | `.github/hooks/` | `~/.copilot/hooks/` |
+| `all` (default) | Everything above | — | — |
 
 ---
 
@@ -41,10 +55,10 @@ $s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/inst
 > curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.md
 > ```
 
-If you are a GitHub Copilot agent helping a user install Copilot Atlas, welcome!
-You will now walk the user through setting up the best multi-agent orchestration
-system for VS Code Copilot. Greet them warmly and let them know you are about to
-guide them through a quick automated setup.
+If you are a GitHub Copilot agent helping a user install the GitHub Copilot Toolkit, welcome!
+You will now walk the user through setting up a personal developer toolkit for VS Code Copilot
+and the Copilot CLI. Greet them warmly and let them know you are about to guide them through
+a quick automated setup.
 
 Follow the steps below exactly.
 
@@ -54,15 +68,15 @@ Follow the steps below exactly.
 
 Ask the user the following question before proceeding:
 
-> **Where would you like to install the Atlas agents?**
+> **Where would you like to install the toolkit?**
 >
-> 1. **User scope (global, recommended)** — agents are available in every VS Code
->    project on this machine. Installed into the VS Code User prompts directory.
+> 1. **User scope (global, recommended)** — agents and skills are available in every VS Code
+>    project on this machine. Agents go into the VS Code User prompts directory; skills into
+>    `~/.copilot/skills/`; instructions into `~/.copilot/copilot-instructions.md`.
 >
-> 2. **Workspace scope (project-specific)** — agents are stored in `.github/agents/`
->    inside the current project folder. This directory is recognized by both
->    **VS Code Copilot** and **Copilot CLI**, and the files can be committed to
->    version control to share the setup with the whole team.
+> 2. **Workspace scope (project-specific)** — artefacts are stored inside the current project
+>    folder under `.github/`. They can be committed to version control to share the setup
+>    with the whole team, and are picked up automatically by both VS Code Copilot and Copilot CLI.
 
 Record their answer as `SCOPE` (`user` or `workspace`).
 
@@ -115,14 +129,35 @@ New-Item -ItemType Directory -Force -Path "<INSTALL_DIR>"
 
 ---
 
-### Step 4: Download and install all agent files
+### Step 4: Download and install all toolkit artefacts
 
-Download each `.agent.md` file from the repository into `INSTALL_DIR`.
+The simplest approach is to run the install script. Set variables first:
+
+```
+SCOPE = user  (or workspace)
+```
+
+**macOS / Linux:**
+```bash
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.sh \
+  | bash -s -- --scope=<SCOPE>
+```
+
+**Windows (PowerShell):**
+```powershell
+$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main/install.ps1
+& ([scriptblock]::Create($s)) -Scope <SCOPE>
+```
+
+If the install script is not available, download each component manually:
+
+#### Agents (`.agent.md` files)
 
 **macOS / Linux:**
 ```bash
 BASE_URL="https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main"
-INSTALL_DIR="<INSTALL_DIR>"
+AGENTS_DIR="<AGENTS_INSTALL_DIR>"
+mkdir -p "$AGENTS_DIR"
 
 for agent in \
   Atlas.agent.md \
@@ -132,7 +167,7 @@ for agent in \
   Explorer-subagent.agent.md \
   Code-Review-subagent.agent.md \
   Frontend-Engineer-subagent.agent.md; do
-    curl -fsSL "$BASE_URL/$agent" -o "$INSTALL_DIR/$agent" \
+    curl -fsSL "$BASE_URL/agents/$agent" -o "$AGENTS_DIR/$agent" \
       && echo "✓ $agent" \
       || echo "✗ $agent (download failed)"
 done
@@ -140,8 +175,9 @@ done
 
 **Windows (PowerShell):**
 ```powershell
-$baseUrl    = "https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main"
-$installDir = "<INSTALL_DIR>"
+$baseUrl   = "https://raw.githubusercontent.com/numo16/Github-Copilot-Atlas/main"
+$agentsDir = "<AGENTS_INSTALL_DIR>"
+New-Item -ItemType Directory -Force -Path $agentsDir | Out-Null
 
 $agents = @(
   "Atlas.agent.md",
@@ -154,9 +190,28 @@ $agents = @(
 )
 
 foreach ($agent in $agents) {
-  Invoke-WebRequest -Uri "$baseUrl/$agent" -OutFile "$installDir\$agent" -UseBasicParsing
+  Invoke-WebRequest -Uri "$baseUrl/agents/$agent" -OutFile "$agentsDir\$agent" -UseBasicParsing
   Write-Host "✓ $agent"
 }
+```
+
+#### mcp-sync skill
+
+**macOS / Linux:**
+```bash
+SKILL_DIR="<SKILLS_INSTALL_DIR>/mcp-sync"
+mkdir -p "$SKILL_DIR"
+for f in SKILL.md mcp-introspect.sh; do
+  curl -fsSL "$BASE_URL/skills/mcp-sync/$f" -o "$SKILL_DIR/$f" && echo "✓ $f"
+done
+chmod +x "$SKILL_DIR/mcp-introspect.sh"
+```
+
+#### Custom instructions
+
+```bash
+curl -fsSL "$BASE_URL/instructions/copilot-instructions.md" \
+  -o "<INSTRUCTIONS_INSTALL_DIR>/copilot-instructions.md" && echo "✓ copilot-instructions.md"
 ```
 
 ---
@@ -233,19 +288,21 @@ along with the agent files so the whole team inherits the same settings automati
 
 ### Step 6: Verify the installation
 
-Run the following command and confirm all seven agent files are present:
+Run the following and confirm all seven agent files are present:
 
 **macOS / Linux:**
 ```bash
-ls "<INSTALL_DIR>"/*.agent.md
+ls "<AGENTS_INSTALL_DIR>"/*.agent.md
+ls "<SKILLS_INSTALL_DIR>/mcp-sync/"
 ```
 
 **Windows (PowerShell):**
 ```powershell
-Get-ChildItem "<INSTALL_DIR>\*.agent.md" | Select-Object Name
+Get-ChildItem "<AGENTS_INSTALL_DIR>\*.agent.md" | Select-Object Name
+Get-ChildItem "<SKILLS_INSTALL_DIR>\mcp-sync\" | Select-Object Name
 ```
 
-Expected files:
+Expected agents:
 ```
 Atlas.agent.md
 Code-Review-subagent.agent.md
@@ -254,6 +311,12 @@ Frontend-Engineer-subagent.agent.md
 Oracle-subagent.agent.md
 Prometheus.agent.md
 Sisyphus-subagent.agent.md
+```
+
+Expected mcp-sync skill files:
+```
+SKILL.md
+mcp-introspect.sh
 ```
 
 ---
@@ -273,9 +336,9 @@ by typing `@Atlas` or `@Prometheus` in the chat panel.
 
 Let them know they can read the
 [README](https://github.com/numo16/Github-Copilot-Atlas/blob/main/README.md)
-for a full overview of every agent and the recommended development workflow.
+for a full overview of every agent, the mcp-sync skill, and the recommended development workflow.
 
-If SCOPE = workspace, also remind them that committing `.github/agents/*.agent.md`
-to the repository is the easiest way to share the Atlas setup with the entire team,
-and that these files will be picked up automatically by both VS Code Copilot and
-Copilot CLI in that workspace.
+If SCOPE = workspace, remind them that committing `.github/agents/`, `.github/skills/`, and
+`.github/copilot-instructions.md` to the repository is the easiest way to share the full toolkit
+setup with the entire team. These files are picked up automatically by both VS Code Copilot
+and Copilot CLI in that workspace.
