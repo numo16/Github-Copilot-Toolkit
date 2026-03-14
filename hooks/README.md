@@ -91,7 +91,7 @@ exit 0
 Install the toolkit with hooks support (adds this directory to `.github/hooks/`):
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh \
   | bash -s -- --scope=workspace --components=hooks
 ```
 

@@ -41,19 +41,19 @@ Github-Copilot-Toolkit/
 **macOS / Linux:**
 ```bash
 # User scope — available in all projects on this machine
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh | bash
 
 # Workspace scope — install into current project's .github/ (committable to version control)
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh | bash -s -- --scope=workspace
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh | bash -s -- --scope=workspace
 ```
 
 **Windows (PowerShell):**
 ```powershell
 # User scope
-irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.ps1 | iex
 
 # Workspace scope
-$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.ps1
+$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.ps1
 & ([scriptblock]::Create($s)) -Scope workspace
 ```
 
@@ -63,11 +63,11 @@ Use `--components` to install only what you need:
 
 ```bash
 # Agents + mcp-sync skill only
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh \
   | bash -s -- --scope=workspace --components=agents,skills
 
 # Just the instructions template
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh \
   | bash -s -- --scope=workspace --components=instructions
 ```
 
@@ -94,7 +94,7 @@ Paste this into any VS Code Copilot Chat session:
 
 ```
 Install the GitHub Copilot Toolkit by following the instructions here:
-https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.md
+https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.md
 ```
 
 ---
@@ -355,7 +355,7 @@ Both VS Code Copilot and the Copilot CLI automatically pick up agents and skills
 If you had agents installed from an earlier version of this repo (flat structure, agent files at the repository root), re-run the installer to get the new layout:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh \
   | bash -s -- --scope=workspace
 ```
 

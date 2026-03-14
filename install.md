@@ -6,28 +6,28 @@ Paste this into your VS Code Copilot chat session:
 
 ```
 Install the GitHub Copilot Toolkit by following the instructions here:
-https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.md
+https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.md
 ```
 
 **Alternative: run the automated install script directly**
 
 ```bash
 # macOS / Linux — user scope (global, default — installs all components)
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh | bash
 
 # macOS / Linux — workspace scope (project-specific, run from project root)
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh | bash -s -- --scope=workspace
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh | bash -s -- --scope=workspace
 
 # Install only specific components (agents, skills, instructions, hooks, or all)
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh | bash -s -- --scope=workspace --components=agents,skills
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh | bash -s -- --scope=workspace --components=agents,skills
 ```
 
 ```powershell
 # Windows — user scope (global, default)
-irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.ps1 | iex
+irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.ps1 | iex
 
 # Windows — workspace scope (project-specific, run from project root)
-$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.ps1
+$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.ps1
 & ([scriptblock]::Create($s)) -Scope workspace
 
 # Install only specific components
@@ -52,7 +52,7 @@ $s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/in
 > WebFetch summarises content and may lose critical details. Always use:
 >
 > ```bash
-> curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.md
+> curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.md
 > ```
 
 If you are a GitHub Copilot agent helping a user install the GitHub Copilot Toolkit, welcome!
@@ -139,13 +139,13 @@ SCOPE = user  (or workspace)
 
 **macOS / Linux:**
 ```bash
-curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.sh \
+curl -fsSL https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.sh \
   | bash -s -- --scope=<SCOPE>
 ```
 
 **Windows (PowerShell):**
 ```powershell
-$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main/install.ps1
+$s = irm https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master/install.ps1
 & ([scriptblock]::Create($s)) -Scope <SCOPE>
 ```
 
@@ -155,7 +155,7 @@ If the install script is not available, download each component manually:
 
 **macOS / Linux:**
 ```bash
-BASE_URL="https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main"
+BASE_URL="https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master"
 AGENTS_DIR="<AGENTS_INSTALL_DIR>"
 mkdir -p "$AGENTS_DIR"
 
@@ -175,7 +175,7 @@ done
 
 **Windows (PowerShell):**
 ```powershell
-$baseUrl   = "https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/main"
+$baseUrl   = "https://raw.githubusercontent.com/numo16/Github-Copilot-Toolkit/master"
 $agentsDir = "<AGENTS_INSTALL_DIR>"
 New-Item -ItemType Directory -Force -Path $agentsDir | Out-Null
 
@@ -348,7 +348,7 @@ by typing `@Atlas` or `@Prometheus` in the chat panel.
 ### Step 8: Point the user to the overview
 
 Let them know they can read the
-[README](https://github.com/numo16/Github-Copilot-Toolkit/blob/main/README.md)
+[README](https://github.com/numo16/Github-Copilot-Toolkit/blob/master/README.md)
 for a full overview of every agent, the `mcp-sync` and `skill-creator` skills, and the recommended development workflow.
 
 If SCOPE = workspace, remind them that committing `.github/agents/`, `.github/skills/`, and
